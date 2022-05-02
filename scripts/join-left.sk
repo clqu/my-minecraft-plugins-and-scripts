@@ -1,0 +1,12 @@
+options:
+    tag: &3clqu.live &8»&7
+
+on join: 
+	message "{@tag} sunucuya hoşgeldin."
+	broadcast "{@tag} %player% katıldı."
+
+on first join: 
+	broadcast "{@tag} %player% sunucuya ilk defa katıldı."
+
+on quit: 
+	broadcast "{@tag} %player% ayrıldı."
