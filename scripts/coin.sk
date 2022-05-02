@@ -1,0 +1,144 @@
+# Admin Yetkisi: coinmanager.admin
+# Developed with <3 by Clqu.
+# [ COIN MANAGER ]
+
+variables:
+    {coin::%player%} = 0
+
+options:
+    tag: &3&lCoin Manager &8»&7
+    adminLimit: 10000
+    playerLimit: 100000
+
+command /coin [<text>] [<offlineplayer>] [<number>]:
+    trigger:
+        if arg 1 is not set: 
+            send "{@tag} Toplam coinin: &b&l%{coin::%player%}%"
+        
+        # Oyuncu Komutları:
+        else if arg 1 is "yardım" or "help":
+            send " " to player
+            send "           &e&m----&r &6&lCoin Yöneticisi &e&m----" to player
+            send " " to player
+            send " &6/coin &f- &eToplam coin miktarınızı görün." to player
+            send " &6/coin top &f- &eEn çok coine sahip 10 kullanıcıyı listeleyin." to player
+            send " &6/coin gönder &f- &eBaşka bir oyuncuya coin aktarın." to player
+            send " " to player
+            send " &m&8Bu skript clqu tarafından geliştirilmiştir." to player
+            send " " to player
+            send "           &e&m----&r &6&lCoin Yöneticisi &e&m----" to player
+            send " " to player
+
+        else if arg 1 is "admin":
+            if player has permission "coinmanager.admin":
+                send " " to player
+                send "           &e&m----&r &6&l[Admin] Coin Yöneticisi &e&m----" to player
+                send " " to player
+                send " &6/coin ekle [oyuncu] [miktar] &f- &eBir oyuncuya coin ekleyin." to player
+                send " &6/coin sıfırla [oyuncu] &f- &eOyuncunun coinini sıfırlayın." to player
+                send " " to player
+                send " &m&8Bu skript clqu tarafından geliştirilmiştir." to player
+                send " " to player
+                send "           &e&m----&r &6&l[Admin] Coin Yöneticisi &e&m----" to player
+                send " " to player
+            else:
+                send "{@tag} &c&lYetersiz yetki."
+
+        else if arg 1 is "pay" or "gönder":
+            if arg 2 is not set:
+                send "{@tag} Doğru kullanım: /coin gönder [oyuncu] [miktar]"
+            else if arg 3 is not set:
+                send "{@tag} Doğru kullanım: /coin gönder [oyuncu] [miktar]"
+            else if arg 3 > {@playerLimit}:
+                send "{@tag} &cHata! &7Oyuncuya en fazla &a{@playerLimit} &7coin ekleyebilirsiniz."
+            else if {coin::%player%} < arg-3:
+                send "{@tag} &cHata! &7Yeterli coininiz yok."
+            else if arg-3 < 0:
+                send "{@tag} &cHata! &7Geçerli bir miktar girmelisiniz."
+            else:
+                add arg-3 to {coin::%arg 2%}
+                subtract arg-3 from {coin::%player%}
+                send "{@tag} &b%arg 2%&7 adlı oyuncuya &a%arg 3% miktar coin gönderildi."
+
+        else if arg 1 is "top" or "liste":
+            loop {coin::*}:
+                add 1 to {_size}
+                if {_low.to.high.list::%loop-value%} is not set:
+                    set {_low.to.high.list::%loop-value%} to loop-index
+                else:
+                    set {_n} to 0
+                    loop {_size} times:
+                        set {_n} to {_n}+1
+                        {_low.to.high.list::%loop-value-1%.%{_n}%} is not set
+                        set {_low.to.high.list::%loop-value-1%.%{_n}%} to loop-index
+                        stop loop
+            wait 1 tick
+            set {_n} to size of {_low.to.high.list::*}
+            loop {_low.to.high.list::*}:
+                set {_high.to.low.list::%{_n}%} to loop-value
+                set {_n} to {_n}-1
+            wait 1 tick
+            send " " to player
+            send "           &e&m----&r &6&lTop 10 | Coin Listesi &e&m----" to player
+            send " " to player
+            loop {_high.to.low.list::*}:
+                add 1 to {_result}
+                if loop-value is not "<player>":
+                    send "           &2%{_result}%. &a%loop-value%&8 &8»&7 &b%{coin::%loop-value%}% coin" to player
+                if {_result} is 10:
+                    stop
+            send " " to player
+            send "        &m&8Bu skript clqu tarafından geliştirilmiştir." to player
+            send " " to player
+            send "           &e&m----&r &6&lTop 10 | Coin Listesi &e&m----" to player
+            send " " to player
+        # Admin Komutları:
+        else if arg 1 is "ekle" or "add":
+            if player has permission "coinmanager.admin":
+                if arg 2 is not set:
+                    send "{@tag} Doğru kullanım: /coin ekle [oyuncu] [miktar]"
+                else if arg 3 is not set:
+                    send "{@tag} Doğru kullanım: /coin ekle [oyuncu] [miktar]"
+                else:
+                    if arg 3 > {@adminLimit}:
+                        send "{@tag} &cHata! &7Oyuncuya en fazla &a{@adminLimit} &7coin ekleyebilirsiniz."
+                    else if arg-3 < 0:
+                        send "{@tag} &cHata! &7Geçerli bir miktar girmelisiniz."
+                    else:
+                        add arg-3 to {coin::%arg 2%}
+                        send "{@tag} &b%arg 2%&7 adlı oyuncuya &a%arg 3% miktar coin eklendi."
+            else:
+                send "{@tag} &c&lYetersiz yetki."
+        else if arg 1 is "eksilt" or "subtract":
+            if player has permission "coinmanager.admin":
+                if arg 2 is not set:
+                    send "{@tag} Doğru kullanım: /coin eksilt [oyuncu] [miktar]"
+                else if arg 3 is not set:
+                    send "{@tag} Doğru kullanım: /coin eksilt [oyuncu] [miktar]"
+                else:
+                    if arg-3 > {coin::%arg 2%}:
+                        send "{@tag} &cHata! &7Oyuncuda o kadar coin yok."
+                    else if arg 3 > {@adminLimit}:
+                        send "{@tag} &cHata! &7Oyuncudan en fazla &a{@adminLimit} &7coin eksiltebilirsiniz."
+                    else if arg-3 < 0:
+                        send "{@tag} &cHata! &7Geçerli bir miktar girmelisiniz."
+                    else:
+                        subtract arg-3 from {coin::%arg 2%}
+                        send "{@tag} &b%arg 2%&7 adlı oyuncudan &a%arg 3% miktar coin eksiltildi."
+            else:
+                send "{@tag} &c&lYetersiz yetki."
+        else if arg 1 is "sıfırla" or "reset":
+            if player has permission "coinmanager.admin":
+                if arg 2 is not set:
+                    send "{@tag} Doğru kullanım: /coin sıfırla [oyuncu]"
+                else:
+                    send "{@tag} &b%arg 2%&7 adlı oyuncunun coini sıfırlandı."
+                    set {coin::%arg 2%} to 0
+            else:
+                send "{@tag} &c&lYetersiz yetki."
+
+        # Geçersiz Kullanım:
+        else if arg 2 is not set:
+            send "{@tag} Geçersiz kullanım, komut listesi: /coin yardım"
+        else if arg 3 is not set:
+            send "{@tag} Geçersiz kullanım, komut listesi: /coin yardım"
