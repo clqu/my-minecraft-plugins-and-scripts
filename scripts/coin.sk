@@ -23,6 +23,7 @@ command /coin [<text>] [<offlineplayer>] [<number>]:
             send " &6/coin &f- &eToplam coin miktarınızı görün." to player
             send " &6/coin top &f- &eEn çok coine sahip 10 kullanıcıyı listeleyin." to player
             send " &6/coin gönder &f- &eBaşka bir oyuncuya coin aktarın." to player
+            send " &6/coin admin &f- &eAdmin komutlarını görün." to player
             send " " to player
             send " &m&8Bu skript clqu tarafından geliştirilmiştir." to player
             send " " to player
@@ -35,6 +36,7 @@ command /coin [<text>] [<offlineplayer>] [<number>]:
                 send "           &e&m----&r &6&l[Admin] Coin Yöneticisi &e&m----" to player
                 send " " to player
                 send " &6/coin ekle [oyuncu] [miktar] &f- &eBir oyuncuya coin ekleyin." to player
+                send " &6/coin eksilt [oyuncu] [miktar] &f- &eBir oyuncudan coin eksiltin." to player
                 send " &6/coin sıfırla [oyuncu] &f- &eOyuncunun coinini sıfırlayın." to player
                 send " " to player
                 send " &m&8Bu skript clqu tarafından geliştirilmiştir." to player
